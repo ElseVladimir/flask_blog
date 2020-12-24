@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Blueprint index page
+  Blog
 {% endblock %}
 
 {% block content_title %}
-  Blueprint page name
+  Posts
 {% endblock %}
 
 {% block content %}
-  Blueprint content
+  {% for post in posts %}
+    <p>
+      <!-- первый параметр функции url_for обращается к вьюхе, второй передает slug в uri -->
+      <a href="{{ url_for('posts.post_detail', slug=post.slug) }}">{{ post.title }}</a>
+    </p>
+  {% endfor %}
 {% endblock %}
