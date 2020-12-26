@@ -18,12 +18,12 @@ class Post(db.Model):
     title = db.Column(db.String(140))
     slug = db.Column(db.String(140), unique=True)
     body = db.Column(db.Text)
-    created = db.Column(db.DateTime, default=datetime.now())
+    created = db.Column(db.DateTime, default=datetime.now)
 
     #устанавливаем отношения между двумя моделями, 1й аргумент название класса с которым выстраиваем отношение,
     #вторым аргументом таблица содержащая данные много-к-многим. backref обратная ссылка, тоесть все посты приобретают
     #свойства tags (post1.tags при его чтении получим список ассоциированных с этим постом тэгов).Аргумент
-    #lazy dynamic позволяет получить обьет BaseQuery c дополнительными свойствами и методами
+    #lazy dynamic позволяет получить обьет BaseQuery c дополнительными свойствами и методами.
     tags = db.relationship('Tag', secondary=post_tags, backref=db.backref('posts', lazy='dynamic'))
 
     def __init__(self, *args, **kwargs):

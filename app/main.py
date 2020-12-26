@@ -5,6 +5,7 @@ from posts.blueprint import posts
 
 import view
 
+#регистрируем блупринт, вторым аргументом указываем куда регистрируем( по какому урлу)
 app.register_blueprint(posts, url_prefix='/blog')
 
 if __name__ == "__main__":
