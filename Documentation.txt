@@ -34,7 +34,7 @@
     db.session.commit() #добавляет запись в базу данных
     posts = Post.query.all() #query.all() вернет список постов
     p3 = Post.query.filter(Post.title.contains('second')).all() #метод filter() возвращает из базы отфильтрованную по критерию информацию
-    p4 = Post.query.filter(Post.title=='s').all()/.first() #строгий поиск,возвращает список обьектов,first() возвращает просто обьекты
+    p4 = Post.query.filter(Post.title=='s').all().first() #строгий поиск,возвращает список обьектов,first() возвращает просто обьекты
     python manage.py db init - делает снимок базы данных(миграцию), где db это имя указанное в app.py
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -46,6 +46,7 @@
     - pip install mysql-connector-python
     - pip install flask-migrate
     - pip install flask-script
+    - pip install wtforms
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
@@ -72,4 +73,11 @@ changelog:
     - в posts/tempates/posts/post_detail.html добавлено отображение закрепленных тэгов под названием поста
     - в posts/blueprint создана новая вьюха - отправляющая на tag_detail.html
     - создан tag_detail.html , тут будет информация о тэгах
+26.12.20
+    - прикручен функционал к форме поиска в base.html
+    - в posts создан forms.py, импортированы зависимости, создан класс PostForm
+    - в posts/templates/posts создан create_post.html, это будет формой создания постов
+    - в create_post прикручена форма создания постов
+    - в blueprint создана  вьюха create_post, она же и обработчик формы
+    - вьюха create_post получает из формы title и body и отправляет в бд, нужно будет допилить валидацию
     
