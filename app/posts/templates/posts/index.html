@@ -9,10 +9,36 @@
 {% endblock %}
 
 {% block content %}
-  {% for post in posts %}
+  {% for post in pages.items %}
+  <!-- posts меняем на pages.items что бы получить пагинацию -->
     <p>
       <!-- первый параметр функции url_for обращается к вьюхе, второй передает slug в uri -->
       <a href="{{ url_for('posts.post_detail', slug=post.slug) }}">{{ post.title }}</a>
     </p>
   {% endfor %}
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if pages.has_prev %}
+    <!-- .has_prev вернет True если у пагинации есть прошлая страница, .prev_num вернет номер прошлой страницы -->
+    <li class="page-item">
+      <a class="page-link" href="./?page={{ pages.prev_num }}">Previous</a>
+    </li>
+    {% endif %}
+
+    {% for page in pages.iter_pages() %}
+      <li {% if page == pages.page %} class="page-item active" {% endif %}>
+        <a class="page-link" href="./?page={{ page }}{% if query != None %}&query={{ query }}{% endif %}">{{ page }}</a>
+      </li>
+    {% endfor %}
+
+    {% if pages.has_next %}
+    <!-- .has_next вернет True если есть следующие страницы у пагинации, .next_num вернет номер следующей пагинации -->
+    <li class="page-item">
+      <a class="page-link" href="./?page={{ pages.next_num }}">Next</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+
 {% endblock %}

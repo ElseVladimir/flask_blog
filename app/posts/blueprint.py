@@ -34,13 +34,22 @@ def create_post():
 @posts.route('/')
 def index():
     query = request.args.get('query') #сюда приходит пользовательский ввод из формы поиска
+    page = request.args.get('page') #приходит get параметр localhost/blog/?page=номер страницы для пагинации
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
     if query:
-        posts = Post.query.filter(Post.title.contains(query) | Post.body.contains(query)).all()
+        posts = Post.query.filter(Post.title.contains(query) | Post.body.contains(query)) #.all() комментируем .all что бы
+        #корректно работал posts.paginate()
         #если что-то в query, то найдет значение в title или body по значению query, | - или, or не работает
     else:
         posts = Post.query.order_by(Post.created.desc()) # сортировка по дате создания(desc() - по убыванию
     # переменная posts уходит в шаблон
-    return render_template('posts/index.html',posts=posts)
+    pages = posts.paginate(page=page,per_page=5) #вызываем метод ПАГИНАЦИИ, три аргумента:номер страницы,количество постов
+    #на одной страницу,error_out=True по дефолту включен(выводит ошибку если что-то не так)
+    return render_template('posts/index.html',posts=posts,pages=pages,query=query) #передав в шаблон pages используем pages.items()
+    #для пагинации, posts можно удалить
 
 #http://localhost:5000/blog/<slug>
 @posts.route('/<slug>') #в угловых скобках имя параметра, в переменную slug записываеться все что после '/'
