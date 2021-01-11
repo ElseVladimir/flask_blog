@@ -31,6 +31,24 @@ def create_post():
     form = PostForm()
     return render_template('posts/create_post.html', form=form)
 
+
+@posts.route('/<slug>/edit/',methods=['POST','GET'])
+def edit_post(slug):
+    """
+    Редактирование постов
+    """
+    post = Post.query.filter(Post.slug==slug).first()
+    if request.method == 'POST':
+        form = PostForm(formdata=request.form,obj=post) #formdata - то чно приложение получает из пользователських input,
+        #request.form - обращаемся к словарю form и берем оттуда данные, obj параметр проверяет есть ли у обьекта,
+        #который в него передается соответсвующие полям формы аттрибуты
+        form.populate_obj(post) #populate_obj() перезаписывает отредактированные данные
+        db.session.commit() #записываем в базу
+        return redirect(url_for('posts.post_detail', slug=post.slug))
+    form = PostForm(obj=post)
+    return render_template('posts/edit_post.html',post=post,form=form)
+
+
 @posts.route('/')
 def index():
     query = request.args.get('query') #сюда приходит пользовательский ввод из формы поиска
@@ -51,6 +69,7 @@ def index():
     return render_template('posts/index.html',posts=posts,pages=pages,query=query) #передав в шаблон pages используем pages.items()
     #для пагинации, posts можно удалить
 
+
 #http://localhost:5000/blog/<slug>
 @posts.route('/<slug>') #в угловых скобках имя параметра, в переменную slug записываеться все что после '/'
 def post_detail(slug):
@@ -58,6 +77,7 @@ def post_detail(slug):
     #переменная post уходит в шаблон
     tags = post.tags #получаем закрепленные за постами тэги
     return render_template('posts/post_detail.html',post=post, tags=tags)
+
 
 #http://localhost:5000/blog/tag/python
 @posts.route('/tag/<slug>')

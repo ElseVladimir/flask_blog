@@ -5,6 +5,9 @@ from flask_sqlalchemy import SQLAlchemy # импортируем orm sqlalchemy
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
 
 
 app = Flask(__name__)
@@ -15,3 +18,9 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand) # первый аргумент название команды
+
+### ADMIN ###
+from models import *
+admin = Admin(app)
+admin.add_view(ModelView(Post, db.session)) # импорт моделей постов в админку
+admin.add_view(ModelView(Tag, db.session)) # импорт моделей тэгов в админку
