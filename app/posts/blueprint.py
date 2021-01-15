@@ -5,6 +5,8 @@ from models import Post, Tag
 from .forms import PostForm
 from app import db
 
+from flask_security import login_required #устанавливает требование регистрации для показа вьюхи
+
 
 posts = Blueprint('posts', __name__, template_folder='templates')
 #создаем экземпляр класса, передаем название блупринта, __name__, и папку где хранятся хтмл шаблоны
@@ -12,6 +14,7 @@ posts = Blueprint('posts', __name__, template_folder='templates')
 #обработчик формы создания поста, лежит сверху других роутеров, что бы они не искали create в постах, methods= списком
 #указываем методы которые вьюха обработает
 @posts.route('/create', methods=['POST', 'GET'])
+@login_required
 def create_post():
     if request.method == 'POST':
         title = request.form['title'] #забираем содержание из формы в переменные
@@ -33,6 +36,7 @@ def create_post():
 
 
 @posts.route('/<slug>/edit/',methods=['POST','GET'])
+@login_required
 def edit_post(slug):
     """
     Редактирование постов
